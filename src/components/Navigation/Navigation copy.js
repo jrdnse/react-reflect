@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Nav() {
+export default function Navigation() {
   const classes = useStyles();
 
   return (
