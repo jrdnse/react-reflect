@@ -8,8 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import SignOutButton from '../SignOut';
-
-import { withFirebase } from '../Firebase';
+import { AuthUserContext } from '../Session';
 
 import * as ROUTES from '../../constants/routes';
 
@@ -34,8 +33,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Navigation = ({ authUser }) => <div>{authUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>;
-
+const Navigation = () => (
+  <div>
+    <AuthUserContext.Consumer>{authUser => (authUser ? <NavigationAuth /> : <NavigationNonAuth />)}</AuthUserContext.Consumer>
+  </div>
+);
 const NavigationAuth = () => {
   const classes = useStyles();
 
