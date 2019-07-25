@@ -4,6 +4,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
+
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import * as ROUTES from '../../constants/routes';
@@ -17,7 +20,23 @@ const SignUp = () => (
   </div>
 );
 
+const useStyles = makeStyles(theme => ({
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative'
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
+  }
+}));
+
 const SignUpFormBase = props => {
+  const classes = useStyles();
+
   const { firebase } = props;
 
   const [nickname, setNickname] = useState('');
@@ -26,12 +45,22 @@ const SignUpFormBase = props => {
   const [password2, setPassword2] = useState('');
   const [error, setError] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = e => {
     e.preventDefault();
-
+    setLoading(true);
     firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
+        firebase.user(authUser.user.uid).set({
+          nickname,
+          email
+        });
+        console.log('database entry added');
+      })
+      .then(() => {
+        setLoading(false);
         setNickname('');
         setEmail('');
         setPassword('');
@@ -44,10 +73,9 @@ const SignUpFormBase = props => {
         setError(err);
         setPassword('');
         setPassword2('');
+        setLoading(false);
       });
   };
-
-  const isInvalid = password !== password2 || password === '' || email === '' || nickname === '';
 
   return (
     <Container maxWidth="sm">
@@ -115,9 +143,12 @@ const SignUpFormBase = props => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button disabled={isInvalid} type="submit" fullWidth variant="contained" color="primary">
-              Sign Up
-            </Button>
+            <div className={classes.wrapper}>
+              <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+                Sign Up
+              </Button>
+              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            </div>
           </Grid>
           <Grid item xs={12} align="center">
             <SignInLink />
