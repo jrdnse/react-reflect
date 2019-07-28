@@ -2,7 +2,6 @@ import app from 'firebase/app';
 import config from './firebaseConfig';
 import 'firebase/auth';
 import 'firebase/database';
-import 'firebase/functions';
 
 class Firebase {
   constructor() {
@@ -10,7 +9,6 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.database();
-    this.functions = app.functions();
 
   }
 
@@ -46,18 +44,6 @@ class Firebase {
     })
   }
 
-  // checkSubmitted = () => {
-  //   const uid = this.getUserID();
-  //   const curDay = new Date();
-  //   const date = `${curDay.getMonth()+1}-${curDay.getDate()}-${curDay.getFullYear()}`;
-  //   this.db.ref(`day_collections/${uid}/${date}`).once('value', snapshot => {
-  //         if(snapshot.exists()){
-  //           console.log("true")
-  //         }else{
-  //           console.log("false")    
-  //         }
-  //     })
-  //   }  
 }
 
 
