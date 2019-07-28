@@ -50,6 +50,7 @@ const SignUpFormBase = props => {
   const onSubmit = e => {
     e.preventDefault();
     setLoading(true);
+
     firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {

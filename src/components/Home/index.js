@@ -1,11 +1,14 @@
 import React from 'react';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { withAuthorization } from '../Session';
 
 const HomePage = () => (
-  <div>
+  <Container maxWidth="lg" style={{ paddingBottom: 30 }}>
+    <CssBaseline />
     <h1>Home</h1>
     <h2>This page is accessible only by authenticated users.</h2>
-  </div>
+  </Container>
 );
 
 const condition = authUser => !!authUser;

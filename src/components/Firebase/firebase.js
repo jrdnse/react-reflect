@@ -2,7 +2,7 @@ import app from 'firebase/app';
 import config from './firebaseConfig';
 import 'firebase/auth';
 import 'firebase/database';
-
+import 'firebase/functions';
 
 class Firebase {
   constructor() {
@@ -10,10 +10,14 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.database();
+    this.functions = app.functions();
+
   }
 
-  doCreateUserWithEmailAndPassword = (email, password) =>
+
+  doCreateUserWithEmailAndPassword = (email, password) => {
     this.auth.createUserWithEmailAndPassword(email, password);
+  }
 
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
@@ -28,6 +32,34 @@ class Firebase {
 
   user = uid => this.db.ref(`users/${uid}`);
 
+  getUserID = () => this.auth.currentUser.uid;
+
+  addDay = (mood, q1, q2, q3) => {
+    const uid = this.getUserID();
+    const curDay = new Date();
+    const date = `${curDay.getMonth()+1}-${curDay.getDate()}-${curDay.getFullYear()}`;
+    this.db.ref(`day_collections/${uid}/${date}`).set({
+      mood: mood,
+      question1: q1,
+      question2: q2,
+      question3: q3,
+    })
+  }
+
+  // checkSubmitted = () => {
+  //   const uid = this.getUserID();
+  //   const curDay = new Date();
+  //   const date = `${curDay.getMonth()+1}-${curDay.getDate()}-${curDay.getFullYear()}`;
+  //   this.db.ref(`day_collections/${uid}/${date}`).once('value', snapshot => {
+  //         if(snapshot.exists()){
+  //           console.log("true")
+  //         }else{
+  //           console.log("false")    
+  //         }
+  //     })
+  //   }  
 }
+
+
 
 export default Firebase;

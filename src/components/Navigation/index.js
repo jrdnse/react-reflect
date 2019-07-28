@@ -35,7 +35,9 @@ const useStyles = makeStyles(theme => ({
 
 const Navigation = () => (
   <div>
-    <AuthUserContext.Consumer>{authUser => (authUser ? <NavigationAuth /> : <NavigationNonAuth />)}</AuthUserContext.Consumer>
+    <AuthUserContext.Consumer>
+      {authUser => (authUser ? <NavigationAuth /> : <NavigationNonAuth />)}
+    </AuthUserContext.Consumer>
   </div>
 );
 const NavigationAuth = () => {
@@ -45,15 +47,18 @@ const NavigationAuth = () => {
     <React.Fragment>
       <CssBaseline />
       <div className={classes.root}>
-        <AppBar position="static" style={{ backgroundColor: '#1976d2' }}>
+        <AppBar position="static" style={{ backgroundColor: '#789CEB' }}>
           <Toolbar>
-            <Link className={classes.linkMain} to={ROUTES.LANDING}>
+            <Link className={classes.linkMain} to={ROUTES.HOME}>
               <Typography variant="h6" className={classes.title}>
                 React Reflect
               </Typography>
             </Link>
-            <Link className={classes.link} to={ROUTES.HOME}>
-              <Button color="inherit">Home</Button>
+            <Link className={classes.link} to={ROUTES.ADD_CARD}>
+              <Button color="inherit">Add Card</Button>
+            </Link>
+            <Link className={classes.link} to={ROUTES.CARDS}>
+              <Button color="inherit">Cards</Button>
             </Link>
             <Link className={classes.link} to={ROUTES.ACCOUNT}>
               <Button color="inherit">Account</Button>
@@ -73,7 +78,7 @@ const NavigationNonAuth = () => {
     <React.Fragment>
       <CssBaseline />
       <div className={classes.root}>
-        <AppBar position="static" style={{ backgroundColor: '#1976d2' }}>
+        <AppBar position="static" style={{ backgroundColor: '#789CEB' }}>
           <Toolbar>
             <Link className={classes.linkMain} to={ROUTES.LANDING}>
               <Typography variant="h6" className={classes.title}>
