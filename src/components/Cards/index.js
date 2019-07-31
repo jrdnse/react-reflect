@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Moment from 'react-moment';
 import Container from '@material-ui/core/Container';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import IconButton from '@material-ui/core/IconButton';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import ItemsCarousel from 'react-items-carousel';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
 import CardLayout from './Card';
 
 import { withFirebase } from '../Firebase';
 import { withAuthorization } from '../Session';
 
-const Cards = () => (
-  <Container maxWidth="sm">
-    <h1>Cards</h1>
-    <CardsForm />
-  </Container>
-);
+const useStyles = makeStyles(theme => ({
+  container: {
+    marginLeft: 240,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0
+    }
+  }
+}));
+
+const Cards = () => {
+  const classes = useStyles();
+
+  return (
+    <Container fixed className={classes.container}>
+      <CssBaseline />
+      <h1>Cards</h1>
+      <CardsForm />
+    </Container>
+  );
+};
 
 const CardsFormBase = props => {
   const { firebase } = props;
@@ -34,8 +45,9 @@ const CardsFormBase = props => {
     const uid = firebase.getUserID();
     let cCards = [];
 
-    firebase.db
-      .ref(`day_collections/${uid}/`)
+    const dbRef = firebase.db.ref(`day_collections/${uid}/`);
+
+    dbRef
       .once('value')
       .then(snapshot => {
         if (snapshot.exists()) {
@@ -54,10 +66,14 @@ const CardsFormBase = props => {
           // console.log(cCards);
         }
         if (!snapshot.exists()) {
+          // TODO: Show message on screen
           console.log('no cards in the db');
         }
       })
-      .then(() => setLoading(false));
+      .then(() => {
+        setLoading(false);
+        dbRef.off();
+      });
   };
 
   useEffect(() => getCards(), []);
@@ -96,8 +112,14 @@ const CardsFormBase = props => {
               }
             >
               {cards.map(card => (
-                <div style={{ margin: 5 }}>
-                  <CardLayout mood={card.mood} q1={card.q1} q2={card.q2} q3={card.q3} />
+                <div style={{ margin: 5 }} key={card.date}>
+                  <CardLayout
+                    date={card.date}
+                    mood={card.mood}
+                    q1={card.q1}
+                    q2={card.q2}
+                    q3={card.q3}
+                  />
                 </div>
               ))}
             </ItemsCarousel>

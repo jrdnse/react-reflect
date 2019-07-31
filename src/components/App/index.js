@@ -12,6 +12,7 @@ import { withAuthentication, AuthUserContext } from '../Session';
 
 import * as ROUTES from '../../constants/routes';
 import AddCard from '../Home/AddCard';
+import Landing from '../Landing';
 
 const App = () => (
   <Router>
@@ -34,6 +35,7 @@ const App = () => (
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.CARDS} component={CardsPage} />
       <Route path={ROUTES.ADD_CARD} component={AddCard} />
+      <Route path={ROUTES.LANDING} component={Landing} />
     </div>
   </Router>
 );

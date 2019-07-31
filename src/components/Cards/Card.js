@@ -12,7 +12,7 @@ const moodStyle = () => {
 };
 
 const CardLayout = props => {
-  const { mood, q1, q2, q3 } = props;
+  const { date, mood, q1, q2, q3 } = props;
 
   return (
     <Card>
@@ -22,7 +22,7 @@ const CardLayout = props => {
             <Grid container direction="row" spacing={2} style={{ borderBottom: '1px solid #eee' }}>
               <Grid item xs={9} style={{ fontStyle: 'italic' }}>
                 <Typography variant="h2">
-                  <Moment format="D MMM YYYY">12-10-1976</Moment>
+                  <Moment format="D MMM YYYY">{date}</Moment>
                 </Typography>
               </Grid>
               <Grid item xs={3} style={moodStyle()}>
