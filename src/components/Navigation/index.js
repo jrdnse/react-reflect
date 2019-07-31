@@ -7,7 +7,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -56,12 +55,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   appBar: {
+    zIndex: theme.zIndex.drawer + 1,
     marginLeft: drawerWidth,
     position: 'fixed',
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       // width: `calc(100% - ${drawerWidth}px)`,
-      position: 'static'
     }
   },
   menuButton: {
@@ -107,7 +106,7 @@ const NavigationAuth = () => {
   }
 
   const drawer = (
-    <div>
+    <React.Fragment>
       <div className={classes.toolbar} />
       <List>
         <ListItem
@@ -151,7 +150,7 @@ const NavigationAuth = () => {
 
         <SignOutButton />
       </List>
-    </div>
+    </React.Fragment>
   );
 
   return (
@@ -179,6 +178,7 @@ const NavigationAuth = () => {
       <nav className={classes.drawer} aria-label="navigation-drawer">
         <Hidden smUp implementation="css">
           <Drawer
+            className={classes.drawer}
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
@@ -195,6 +195,7 @@ const NavigationAuth = () => {
         </Hidden>
         <Hidden xsDown implementation="css">
           <Drawer
+            className={classes.drawer}
             classes={{
               paper: classes.drawerPaper
             }}

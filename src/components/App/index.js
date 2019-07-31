@@ -1,18 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from '../Navigation';
-import LandingPage from '../Landing';
 import SignUpPage from '../SignUp';
 import SignInPage from '../SignIn';
 import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import CardsPage from '../Cards';
+import AddCard from '../Home/AddCard';
+import Landing from '../Landing';
 import { withAuthentication, AuthUserContext } from '../Session';
 
 import * as ROUTES from '../../constants/routes';
-import AddCard from '../Home/AddCard';
-import Landing from '../Landing';
 
 const App = () => (
   <Router>
@@ -24,7 +23,7 @@ const App = () => (
           authUser ? (
             <Route exact path={ROUTES.LANDING} component={HomePage} />
           ) : (
-            <Route exact path={ROUTES.LANDING} component={LandingPage} />
+            <Route exact path={ROUTES.LANDING} component={Landing} />
           )
         }
       </AuthUserContext.Consumer>
