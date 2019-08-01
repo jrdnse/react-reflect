@@ -42,11 +42,16 @@ const EmptyCardBase = props => {
 
   return (
     <Card>
-      <CardContent maxWidth="sm" style={{ padding: 0 }}>
+      <CardContent style={{ padding: 0 }}>
         <form onSubmit={uploadCard}>
           <Grid container spacing={2} style={{ padding: 5 }}>
             <Grid item xs={12}>
-              <Grid container direction="row" spacing={2} style={{ borderBottom: '1px solid #eee' }}>
+              <Grid
+                container
+                direction="row"
+                spacing={2}
+                style={{ borderBottom: '1px solid #eee' }}
+              >
                 <Grid item xs={9}>
                   <Typography variant="h2">
                     <Moment format="D MMM YYYY">{new Date()}</Moment>
@@ -65,7 +70,7 @@ const EmptyCardBase = props => {
             </Grid>
 
             <Grid item xs={12}>
-              <Grid container direction="column" spacing={1}>
+              <Grid container style={{ maxWidth: '100%' }} direction="column" spacing={1}>
                 <Grid item>
                   <h3 className={classes.h3}>What was the best part of today?</h3>
                   <TextField

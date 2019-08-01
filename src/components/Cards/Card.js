@@ -16,7 +16,7 @@ const CardLayout = props => {
 
   return (
     <Card>
-      <CardContent maxWidth="sm" style={{ padding: 0 }}>
+      <CardContent style={{ padding: 0, width: '100%' }}>
         <Grid container spacing={2} style={{ padding: 5 }}>
           <Grid item xs={12}>
             <Grid container direction="row" spacing={2} style={{ borderBottom: '1px solid #eee' }}>
@@ -38,18 +38,18 @@ const CardLayout = props => {
           </Grid>
 
           <Grid item xs={12}>
-            <Grid container>
-              <Grid item style={{ fontStyle: 'italic' }}>
+            <Grid container direction="column" spacing={1}>
+              <Grid item style={{ fontStyle: 'italic', maxWidth: '100%' }}>
                 <h3>What was the best part of today?</h3>
-                <p>{q1}</p>
+                <Typography variant="body1">{q1}</Typography>
               </Grid>
-              <Grid item style={{ fontStyle: 'italic' }}>
+              <Grid item style={{ fontStyle: 'italic', maxWidth: '100%' }}>
                 <h3>How can you improve tomorrow?</h3>
-                <p>{q2}</p>
+                <Typography variant="body1">{q2}</Typography>
               </Grid>
-              <Grid item style={{ fontStyle: 'italic' }}>
+              <Grid item style={{ fontStyle: 'italic', maxWidth: '100%' }}>
                 <h3>What are you feeling grateful for?</h3>
-                <p>{q3}</p>
+                <Typography variant="body1">{q3}</Typography>
               </Grid>
             </Grid>
           </Grid>

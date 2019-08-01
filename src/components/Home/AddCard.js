@@ -47,7 +47,7 @@ const AddCardFormBase = props => {
   const alreadySubmitted = () => {
     const uid = firebase.getUserID();
     const curDay = new Date();
-    const date = `${curDay.getMonth() + 1}-${curDay.getDate()}-${curDay.getFullYear()}`;
+    const date = `${curDay.getFullYear()}-${curDay.getMonth() + 1}-${curDay.getDate()}`;
     firebase.db.ref(`day_collections/${uid}/${date}`).once('value', snapshot => {
       if (snapshot.exists()) {
         console.log('true');

@@ -31,6 +31,13 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
+  },
+  container: {
+    marginLeft: 240,
+    marginTop: 80,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0
+    }
   }
 }));
 
@@ -63,7 +70,7 @@ const PasswordResetFormBase = props => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" className={classes.container}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h2">Reset Password</Typography>
@@ -87,7 +94,13 @@ const PasswordResetFormBase = props => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.wrapper}>
-              <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={loading}
+              >
                 Reset Password
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}

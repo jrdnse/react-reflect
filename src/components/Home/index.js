@@ -24,8 +24,8 @@ const HomePage = props => {
 
   const data = [
     {
-      color: 'steelblue',
-      points: [{ x: 1, y: 30 }, { x: 3, y: 78 }, { x: 7, y: 12 }]
+      color: 'blue',
+      points: [{ x: '2019-10-7', y: 33 }, { x: '2019-11-30', y: 87 }]
     }
   ];
 
@@ -75,7 +75,6 @@ const HomePage = props => {
     <Container fixed className={classes.container}>
       <CssBaseline />
       <h1>Home</h1>
-      <h2>This page is accessible only by authenticated users.</h2>
       <LineChart
         xLabel="DATE"
         yLabel="MOOD"
@@ -84,8 +83,9 @@ const HomePage = props => {
         width={600}
         height={400}
         data={moodData}
+        isDate
+        hidePoints
       />
-      {console.log(moodData)}
     </Container>
   );
 };

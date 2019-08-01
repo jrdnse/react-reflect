@@ -3,10 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { AuthUserContext, withAuthorization } from '../Session';
+import PasswordChange from '../PasswordChange';
+import DeleteUser from '../DeleteUser';
 
 const useStyles = makeStyles(theme => ({
   container: {
     marginLeft: 240,
+    marginTop: 80,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0
     }
@@ -19,11 +22,21 @@ const AccountPage = () => {
   return (
     <Container fixed className={classes.container}>
       <CssBaseline />
+      <h1>Account</h1>
       <AuthUserContext.Consumer>
         {authUser => (
-          <div>
-            <h1>Account: {authUser.email}</h1>
-          </div>
+          <React.Fragment>
+            <h3>
+              E-mail: <br /> {authUser.email}
+            </h3>
+            <h3>
+              Change Password: <br /> <PasswordChange />
+            </h3>
+            <h3>
+              Delete user and all data: <br />
+              <DeleteUser />
+            </h3>
+          </React.Fragment>
         )}
       </AuthUserContext.Consumer>
     </Container>

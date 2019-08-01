@@ -6,6 +6,10 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
 
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -31,6 +35,13 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
+  },
+  container: {
+    marginLeft: 240,
+    marginTop: 80,
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0
+    }
   }
 }));
 
@@ -46,6 +57,11 @@ const SignUpFormBase = props => {
   const [error, setError] = useState('');
 
   const [loading, setLoading] = useState(false);
+  const [pwdVisibility, setPwdVisibility] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setPwdVisibility(!pwdVisibility);
+  };
 
   const onSubmit = e => {
     e.preventDefault();
@@ -75,11 +91,12 @@ const SignUpFormBase = props => {
         setPassword('');
         setPassword2('');
         setLoading(false);
+        props.history.push(ROUTES.SIGN_UP);
       });
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" className={classes.container}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h2">Sign Up</Typography>
@@ -123,10 +140,22 @@ const SignUpFormBase = props => {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={pwdVisibility ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
               onChange={e => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                    >
+                      {pwdVisibility ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -137,7 +166,7 @@ const SignUpFormBase = props => {
               fullWidth
               name="password2"
               label="Repeat Password"
-              type="password"
+              type={pwdVisibility ? 'text' : 'password'}
               id="password2"
               autoComplete="current-password"
               onChange={e => setPassword2(e.target.value)}
@@ -145,7 +174,13 @@ const SignUpFormBase = props => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.wrapper}>
-              <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={loading}
+              >
                 Sign Up
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
