@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -77,21 +77,42 @@ const NavigationNonAuth = () => {
     <div>
       <div className={classes.toolbar} />
       <List>
-        <ListItem component={NavLink} to={ROUTES.LANDING} button key={1} onClick={() => setMobileOpen(false)}>
+        <ListItem
+          component={React.forwardRef((props, ref) => (
+            <Link to={ROUTES.LANDING} {...props} ref={ref} />
+          ))}
+          button
+          key={1}
+          onClick={() => setMobileOpen(false)}
+        >
           <ListItemIcon>
             <Home />
           </ListItemIcon>
           <ListItemText>LANDING</ListItemText>
         </ListItem>
 
-        <ListItem component={NavLink} to={ROUTES.SIGN_IN} button key={2} onClick={() => setMobileOpen(false)}>
+        <ListItem
+          component={React.forwardRef((props, ref) => (
+            <Link to={ROUTES.SIGN_IN} {...props} ref={ref} />
+          ))}
+          button
+          key={2}
+          onClick={() => setMobileOpen(false)}
+        >
           <ListItemIcon>
             <ExitToApp />
           </ListItemIcon>
           <ListItemText>SIGN IN</ListItemText>
         </ListItem>
 
-        <ListItem component={NavLink} to={ROUTES.SIGN_UP} button key={3} onClick={() => setMobileOpen(false)}>
+        <ListItem
+          component={React.forwardRef((props, ref) => (
+            <Link to={ROUTES.SIGN_UP} {...props} ref={ref} />
+          ))}
+          button
+          key={3}
+          onClick={() => setMobileOpen(false)}
+        >
           <ListItemIcon>
             <PersonAdd />
           </ListItemIcon>
