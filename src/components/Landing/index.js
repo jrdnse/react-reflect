@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import bgImg from './landing-bg.svg';
@@ -22,7 +23,11 @@ const LandingPage = () => {
       className={classes.container}
       maxWidth="lg"
       style={{ height: 800, backgroundImage: `url(${bgImg})`, backgroundRepeat: 'no-repeat' }}
-    />
+    >
+      <Helmet>
+        <title>RЯ :: React Reflect</title>
+      </Helmet>
+    </Container>
   );
 };
 

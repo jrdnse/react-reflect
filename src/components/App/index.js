@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Navigation from '../Navigation';
 import SignUpPage from '../SignUp';
 import SignInPage from '../SignIn';
@@ -15,8 +16,10 @@ import * as ROUTES from '../../constants/routes';
 const App = () => (
   <Router>
     <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+      </Helmet>
       <Navigation />
-
       <AuthUserContext.Consumer>
         {authUser =>
           authUser ? (

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
@@ -67,6 +68,9 @@ const HomePage = props => {
 
   return (
     <Container fixed className={classes.container}>
+      <Helmet>
+        <title>RЯ :: Home</title>
+      </Helmet>
       <CssBaseline />
       <h1>Home</h1>
       <Container>

@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -98,6 +99,9 @@ const SignUpFormBase = props => {
 
   return (
     <Container maxWidth="sm" className={classes.container}>
+      <Helmet>
+        <title>RЯ :: Sign Up</title>
+      </Helmet>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h2">Sign Up</Typography>

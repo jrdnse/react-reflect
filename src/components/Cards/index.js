@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withSnackbar } from 'notistack';
@@ -13,6 +14,9 @@ const CardsCarousel = React.lazy(() => import('./CardsCarousel'));
 const Cards = () => {
   return (
     <Container fixed>
+      <Helmet>
+        <title>RЯ :: Cards</title>
+      </Helmet>
       <CssBaseline />
       <h1>Cards</h1>
       <CardsForm />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
@@ -22,6 +23,9 @@ const AccountPage = () => {
 
   return (
     <Container fixed className={classes.container}>
+      <Helmet>
+        <title>RЯ :: Account</title>
+      </Helmet>
       <CssBaseline />
       <h1>Account</h1>
       <AuthUserContext.Consumer>

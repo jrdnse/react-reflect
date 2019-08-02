@@ -1,13 +1,12 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
-
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 import * as ROUTES from '../../constants/routes';
-
 import Firebase, { withFirebase } from '../Firebase';
 import { withAuthorization } from '../Session';
 
@@ -15,6 +14,9 @@ const AddCardTemplate = React.lazy(() => import('./AddCardTemplate'));
 
 const AddCard = () => (
   <Container maxWidth="sm">
+    <Helmet>
+      <title>RЯ :: Add a card</title>
+    </Helmet>
     <h1>Add card</h1>
     <AddCardForm />
   </Container>

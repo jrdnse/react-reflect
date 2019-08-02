@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -16,6 +17,9 @@ import * as ROUTES from '../../constants/routes';
 
 const PasswordForget = () => (
   <div>
+    <Helmet>
+      <title>RЯ :: Forgot Password</title>
+    </Helmet>
     <PasswordForgetForm />
   </div>
 );
