@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
-
-import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import * as ROUTES from '../../constants/routes';
+import { withRouter } from 'react-router-dom';
+import { withSnackbar } from 'notistack';
+import Firebase, { withFirebase } from '../Firebase';
 
-import { withFirebase } from '../Firebase';
-
-const PasswordReset = () => (
+const PasswordChange = () => (
   <div>
-    <PasswordResetForm />
+    <PasswordChangeForm />
   </div>
 );
 
@@ -37,14 +34,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PasswordResetFormBase = props => {
+const PasswordChangeFormBase = props => {
   const classes = useStyles();
 
   const { firebase } = props;
 
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [pwdVisibility, setPwdVisibility] = useState(false);
 
@@ -60,22 +56,26 @@ const PasswordResetFormBase = props => {
       .doPasswordUpdate(password1)
       .then(() => {
         setLoading(false);
-        setError('');
         setPassword1('');
         setPassword2('');
+        props.enqueueSnackbar('Password successfully updated! ', {
+          variant: 'success'
+        });
       })
       .catch(err => {
         setLoading(false);
-        setError(err);
+        props.enqueueSnackbar(err.message, {
+          variant: 'error'
+        });
+        setPassword1('');
+        setPassword2('');
       });
   };
 
   return (
     <React.Fragment>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          {error && <Typography variant="h6">{error.message}</Typography>}
-        </Grid>
+        <Grid item xs={12} />
       </Grid>
       <form onSubmit={onSubmit}>
         <Grid container direction="row" spacing={2}>
@@ -93,10 +93,7 @@ const PasswordResetFormBase = props => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                    >
+                    <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
                       {pwdVisibility ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -123,9 +120,7 @@ const PasswordResetFormBase = props => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={
-                  loading || password1 !== password2 || password1 === '' || password2 === ''
-                }
+                disabled={loading || password1 !== password2 || password1 === '' || password2 === ''}
               >
                 Update Password
               </Button>
@@ -138,9 +133,15 @@ const PasswordResetFormBase = props => {
   );
 };
 
-const PasswordResetForm = compose(
+const PasswordChangeForm = compose(
   withRouter,
-  withFirebase
-)(PasswordResetFormBase);
+  withFirebase,
+  withSnackbar
+)(PasswordChangeFormBase);
 
-export default PasswordReset;
+export default PasswordChange;
+
+PasswordChangeFormBase.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase).isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired
+};

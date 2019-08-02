@@ -1,4 +1,6 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -10,13 +12,13 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
-
-import { Link, withRouter } from 'react-router-dom';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { compose } from 'recompose';
+import { Link, withRouter } from 'react-router-dom';
+import { withSnackbar } from 'notistack';
+import Firebase, { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
-
-import { withFirebase } from '../Firebase';
-import { SignInLink } from '../SignIn';
 
 const SignUp = () => (
   <div>
@@ -50,14 +52,13 @@ const SignUpFormBase = props => {
 
   const { firebase } = props;
 
-  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
-  const [error, setError] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [pwdVisibility, setPwdVisibility] = useState(false);
+  const [advChecked, setAdvChecked] = useState(false);
 
   const handleClickShowPassword = () => {
     setPwdVisibility(!pwdVisibility);
@@ -71,23 +72,23 @@ const SignUpFormBase = props => {
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
         firebase.user(authUser.user.uid).set({
-          nickname,
           email
         });
-        console.log('database entry added');
       })
       .then(() => {
         setLoading(false);
-        setNickname('');
         setEmail('');
         setPassword('');
         setPassword2('');
-        setError('');
-        console.log('user registered!');
+        props.enqueueSnackbar('Sign up successful! Redirecting you to the Homepage.', {
+          variant: 'success'
+        });
         props.history.push(ROUTES.HOME);
       })
       .catch(err => {
-        setError(err);
+        props.enqueueSnackbar(err.message, {
+          variant: 'error'
+        });
         setPassword('');
         setPassword2('');
         setLoading(false);
@@ -100,25 +101,10 @@ const SignUpFormBase = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h2">Sign Up</Typography>
-          {error && <Typography variant="h6">{error.message}</Typography>}
         </Grid>
       </Grid>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              value={nickname}
-              autoComplete="nname"
-              name="nickname"
-              variant="outlined"
-              required
-              fullWidth
-              id="nickname"
-              label="Nickname"
-              autoFocus
-              onChange={e => setNickname(e.target.value)}
-            />
-          </Grid>
           <Grid item xs={12}>
             <TextField
               value={email}
@@ -147,10 +133,7 @@ const SignUpFormBase = props => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                    >
+                    <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
                       {pwdVisibility ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -173,13 +156,33 @@ const SignUpFormBase = props => {
             />
           </Grid>
           <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={advChecked}
+                  onChange={() => setAdvChecked(!advChecked)}
+                  value={advChecked}
+                  color="primary"
+                />
+              }
+              label="I acknowledge that the project, in it's current state, doesn't have End-To-End encryption, which means that all the data(except the password) can be seen by the administrator Jordan ONLY. (P.S: Hi, Jordan here. Just wanted to give this heads up so you know that I can see the data even though I have no intention to do so.)"
+            />
+          </Grid>
+          <Grid item xs={12}>
             <div className={classes.wrapper}>
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 fullWidth
-                disabled={loading}
+                disabled={
+                  loading ||
+                  email === '' ||
+                  password === '' ||
+                  password2 === '' ||
+                  password !== password2 ||
+                  advChecked === false
+                }
               >
                 Sign Up
               </Button>
@@ -187,7 +190,9 @@ const SignUpFormBase = props => {
             </div>
           </Grid>
           <Grid item xs={12} align="center">
-            <SignInLink />
+            <Typography variant="subtitle1">
+              Already have an account? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+            </Typography>
           </Grid>
         </Grid>
       </form>
@@ -195,16 +200,16 @@ const SignUpFormBase = props => {
   );
 };
 
-const SignUpLink = () => (
-  <Typography variant="subtitle1">
-    Don&apos;t have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-  </Typography>
-);
-
 const SignUpForm = compose(
   withRouter,
-  withFirebase
+  withFirebase,
+  withSnackbar
 )(SignUpFormBase);
 export default SignUp;
 
-export { SignUpForm, SignUpLink };
+SignUpFormBase.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase).isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  push: PropTypes.func.isRequired
+};

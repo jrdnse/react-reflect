@@ -1,14 +1,15 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
+import bgImg from './landing-bg.svg';
 
 const useStyles = makeStyles(theme => ({
   container: {
     marginLeft: 240,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0
-    }
+    },
+    marginTop: 80
   }
 }));
 
@@ -16,10 +17,12 @@ const LandingPage = () => {
   const classes = useStyles();
 
   return (
-    <Container fixed className={classes.container}>
-      <CssBaseline />
-      <h1>Landing</h1>
-    </Container>
+    <Container
+      fixed
+      className={classes.container}
+      maxWidth="lg"
+      style={{ height: 800, backgroundImage: `url(${bgImg})`, backgroundRepeat: 'no-repeat' }}
+    />
   );
 };
 

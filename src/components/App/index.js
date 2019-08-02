@@ -7,10 +7,9 @@ import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import CardsPage from '../Cards';
-import AddCard from '../Home/AddCard';
+import AddCard from '../AddCard/AddCard';
 import Landing from '../Landing';
 import { withAuthentication, AuthUserContext } from '../Session';
-
 import * as ROUTES from '../../constants/routes';
 
 const App = () => (
@@ -27,6 +26,7 @@ const App = () => (
           )
         }
       </AuthUserContext.Consumer>
+
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
@@ -34,7 +34,6 @@ const App = () => (
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.CARDS} component={CardsPage} />
       <Route path={ROUTES.ADD_CARD} component={AddCard} />
-      <Route path={ROUTES.LANDING} component={Landing} />
     </div>
   </Router>
 );

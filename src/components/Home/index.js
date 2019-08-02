@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import LineChart from 'react-linechart';
+import 'react-linechart/dist/styles.css';
+import { compose } from 'recompose';
+import { withSnackbar } from 'notistack';
 import { withAuthorization } from '../Session';
-import { withFirebase } from '../Firebase';
-
-import '../../../node_modules/react-linechart/dist/styles.css';
+import Firebase, { withFirebase } from '../Firebase';
 
 const useStyles = makeStyles(theme => ({
   container: {
     marginLeft: 240,
+    marginTop: 80,
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0
     }
@@ -22,18 +25,9 @@ const HomePage = props => {
 
   const classes = useStyles();
 
-  const data = [
-    {
-      color: 'blue',
-      points: [{ x: '2019-10-7', y: 33 }, { x: '2019-11-30', y: 87 }]
-    }
-  ];
-
   const [moodData, setMoodData] = useState([]);
-  const [loading, setLoading] = useState();
 
   const getMoodData = () => {
-    setLoading(true);
     const uid = firebase.getUserID();
     let moods = [];
 
@@ -59,12 +53,12 @@ const HomePage = props => {
           ]);
         }
         if (!snapshot.exists()) {
-          // TODO: Show message on screen
-          console.log('no data in the db');
+          props.enqueueSnackbar('No data to visualize!', {
+            variant: 'info'
+          });
         }
       })
       .then(() => {
-        setLoading(false);
         dbRef.off();
       });
   };
@@ -75,21 +69,33 @@ const HomePage = props => {
     <Container fixed className={classes.container}>
       <CssBaseline />
       <h1>Home</h1>
-      <LineChart
-        xLabel="DATE"
-        yLabel="MOOD"
-        yMin={0}
-        yMax={100}
-        width={600}
-        height={400}
-        data={moodData}
-        isDate
-        hidePoints
-      />
+      <Container>
+        <h3 style={{ marginBottom: -30 }}>Average mood chart:</h3>
+        <LineChart
+          xLabel="DATE"
+          yLabel="MOOD"
+          yMin={0}
+          yMax={100}
+          width={600}
+          height={400}
+          data={moodData}
+          isDate
+          hidePoints
+        />
+      </Container>
     </Container>
   );
 };
 
 const condition = authUser => !!authUser;
 
-export default withFirebase(withAuthorization(condition)(HomePage));
+export default compose(
+  withFirebase,
+  withSnackbar,
+  withAuthorization(condition)
+)(HomePage);
+
+HomePage.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase).isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired
+};

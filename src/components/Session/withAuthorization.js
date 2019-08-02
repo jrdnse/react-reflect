@@ -1,8 +1,9 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
-import { withFirebase } from '../Firebase';
+import Firebase, { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import AuthUserContext from './context';
 
@@ -19,13 +20,11 @@ const withAuthorization = condition => Component => {
     };
 
     useEffect(() => {
-      console.log('auth mounted');
       listener();
     });
 
     useEffect(() => {
       return () => {
-        console.log('auth unmounted');
         listener();
       };
     }, []);
@@ -35,6 +34,12 @@ const withAuthorization = condition => Component => {
         {authUser => (condition(authUser) ? <Component {...props} /> : null)}
       </AuthUserContext.Consumer>
     );
+  };
+
+  WithAuthorization.propTypes = {
+    firebase: PropTypes.instanceOf(Firebase).isRequired,
+    history: PropTypes.object.isRequired,
+    push: PropTypes.func.isRequired
   };
   return compose(
     withRouter,

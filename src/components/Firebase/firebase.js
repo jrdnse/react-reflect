@@ -9,28 +9,22 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.database();
-
   }
 
-  doCreateUserWithEmailAndPassword = (email, password) => 
-    this.auth.createUserWithEmailAndPassword(email, password);
-  
+  doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
 
-  doSignInWithEmailAndPassword = (email, password) =>
-    this.auth.signInWithEmailAndPassword(email, password);
+  doSignInWithEmailAndPassword = (email, password) => this.auth.signInWithEmailAndPassword(email, password);
 
   doSignOut = () => this.auth.signOut();
 
-  doPasswordReset = email => 
-  this.auth.sendPasswordResetEmail(email);
+  doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
-  doPasswordUpdate = password =>
-  this.auth.currentUser.updatePassword(password);
+  doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
   doDeleteUser = () => {
     const uid = this.getUserID();
     this.db.ref(`users/${uid}`).remove();
-    this.db.ref(`day_collections/${uid}`).removeg();
+    this.db.ref(`day_collections/${uid}`).remove();
     this.auth.currentUser.delete();
   };
 
@@ -41,17 +35,14 @@ class Firebase {
   addDay = (mood, q1, q2, q3) => {
     const uid = this.getUserID();
     const curDay = new Date();
-    const date = `${curDay.getFullYear()}-${curDay.getMonth()+1}-${curDay.getDate()}`;
+    const date = `${curDay.getFullYear()}-${curDay.getMonth() + 1}-${curDay.getDate()}`;
     this.db.ref(`day_collections/${uid}/${date}`).set({
       mood: mood,
       question1: q1,
       question2: q2,
-      question3: q3,
-    })
-  }
-
+      question3: q3
+    });
+  };
 }
-
-
 
 export default Firebase;

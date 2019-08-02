@@ -1,25 +1,48 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-import { withFirebase } from '../Firebase';
+import { withSnackbar } from 'notistack';
+import Firebase, { withFirebase } from '../Firebase';
 
 const DeleteUser = props => {
   const { firebase } = props;
 
   const [open, setOpen] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
-  function handleClickOpen() {
+  const handleClickOpen = () => {
     setOpen(true);
-  }
+  };
 
-  function handleClose() {
+  const handleClose = () => {
     setOpen(false);
-  }
+  };
+
+  const submitHandler = () => {
+    setDisabled(true);
+    const uid = firebase.getUserID();
+
+    firebase.auth.currentUser
+      .delete()
+      .then(() => {
+        firebase.db.ref(`users/${uid}`).remove();
+        firebase.db.ref(`day_collections/${uid}`).remove();
+        props.enqueueSnackbar('User account and all corresponding data deleted! ', {
+          variant: 'success'
+        });
+      })
+      .catch(e => {
+        props.enqueueSnackbar(e.message, {
+          variant: 'error'
+        });
+        setOpen(false);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -40,8 +63,7 @@ const DeleteUser = props => {
         <DialogTitle id="delete-user-title">Are you sure?</DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-user-and-data-dialog">
-            This will delete your account as well as all the information associated. The action is
-            irreversible.
+            This will delete your account as well as all the information associated. The action is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -49,9 +71,12 @@ const DeleteUser = props => {
             Cancel
           </Button>
           <Button
-            onClick={firebase.doDeleteUser}
+            onClick={submitHandler}
             color="primary"
-            style={{ backgroundColor: '#dc3545', color: 'white' }}
+            style={
+              disabled ? { backgroundColor: '#eee', color: 'white' } : { backgroundColor: '#dc3545', color: 'white' }
+            }
+            disabled={disabled}
           >
             DELETE
           </Button>
@@ -61,4 +86,9 @@ const DeleteUser = props => {
   );
 };
 
-export default withFirebase(DeleteUser);
+export default withFirebase(withSnackbar(DeleteUser));
+
+DeleteUser.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase).isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired
+};

@@ -1,4 +1,6 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -6,17 +8,15 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { withSnackbar } from 'notistack';
+import Firebase, { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
-import { withFirebase } from '../Firebase';
-import { SignUpLink } from '../SignUp';
-
-const PasswordReset = () => (
+const PasswordForget = () => (
   <div>
-    <PasswordResetForm />
+    <PasswordForgetForm />
   </div>
 );
 
@@ -41,13 +41,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PasswordResetFormBase = props => {
+const PasswordForgetFormBase = props => {
   const classes = useStyles();
 
   const { firebase } = props;
 
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const onSubmit = e => {
@@ -58,14 +57,17 @@ const PasswordResetFormBase = props => {
       .doPasswordReset(email)
       .then(() => {
         setLoading(false);
+        props.enqueueSnackbar(`A password reset link has been sent to ${email}`, {
+          variant: 'success'
+        });
         setEmail('');
-        setError('');
-        console.log('user logged in!');
         props.history.push(ROUTES.HOME);
       })
       .catch(err => {
         setLoading(false);
-        setError(err);
+        props.enqueueSnackbar(err.message, {
+          variant: 'error'
+        });
       });
   };
 
@@ -74,7 +76,6 @@ const PasswordResetFormBase = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h2">Reset Password</Typography>
-          {error && <Typography variant="h6">{error.message}</Typography>}
         </Grid>
       </Grid>
       <form onSubmit={onSubmit}>
@@ -94,20 +95,16 @@ const PasswordResetFormBase = props => {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.wrapper}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                disabled={loading}
-              >
+              <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
                 Reset Password
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             </div>
           </Grid>
           <Grid item xs={12} align="center">
-            <SignUpLink />
+            <Typography variant="subtitle1">
+              Don&apos;t have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+            </Typography>
           </Grid>
         </Grid>
       </form>
@@ -115,17 +112,17 @@ const PasswordResetFormBase = props => {
   );
 };
 
-const ForgotPasswordLink = () => (
-  <Typography variant="subtitle1">
-    <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
-  </Typography>
-);
-
-const PasswordResetForm = compose(
+const PasswordForgetForm = compose(
   withRouter,
-  withFirebase
-)(PasswordResetFormBase);
+  withFirebase,
+  withSnackbar
+)(PasswordForgetFormBase);
 
-export default PasswordReset;
+export default PasswordForget;
 
-export { PasswordResetForm, ForgotPasswordLink };
+PasswordForgetFormBase.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase).isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  push: PropTypes.func.isRequired
+};

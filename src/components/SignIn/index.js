@@ -1,4 +1,6 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -10,14 +12,12 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
-
-import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { Link, withRouter } from 'react-router-dom';
+import { withSnackbar } from 'notistack';
 import * as ROUTES from '../../constants/routes';
 
-import { withFirebase } from '../Firebase';
-import { SignUpLink } from '../SignUp';
-import { ForgotPasswordLink } from '../PasswordForget';
+import Firebase, { withFirebase } from '../Firebase';
 
 const SignIn = () => (
   <div>
@@ -53,7 +53,6 @@ const SignInFormBase = props => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [pwdVisibility, setPwdVisibility] = useState(false);
 
@@ -71,14 +70,17 @@ const SignInFormBase = props => {
         setLoading(false);
         setEmail('');
         setPassword('');
-        setError('');
-        console.log('user logged in!');
+        props.enqueueSnackbar('Logged in! Redirecting you to the Homepage.', {
+          variant: 'success'
+        });
         props.history.push(ROUTES.HOME);
       })
       .catch(err => {
         setLoading(false);
-        setError(err);
         setPassword('');
+        props.enqueueSnackbar(err.message, {
+          variant: 'error'
+        });
       });
   };
 
@@ -87,7 +89,6 @@ const SignInFormBase = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h2">Sign In</Typography>
-          {error && <Typography variant="h6">{error.message}</Typography>}
         </Grid>
       </Grid>
       <form onSubmit={onSubmit}>
@@ -120,10 +121,7 @@ const SignInFormBase = props => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                    >
+                    <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
                       {pwdVisibility ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -138,7 +136,7 @@ const SignInFormBase = props => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                disabled={loading}
+                disabled={loading || email === '' || password === ''}
               >
                 Sign In
               </Button>
@@ -146,8 +144,12 @@ const SignInFormBase = props => {
             </div>
           </Grid>
           <Grid item xs={12} align="center">
-            <SignUpLink />
-            <ForgotPasswordLink />
+            <Typography variant="subtitle1">
+              Don&apos;t have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+            </Typography>
+            <Typography variant="subtitle1">
+              <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
+            </Typography>
           </Grid>
         </Grid>
       </form>
@@ -155,16 +157,17 @@ const SignInFormBase = props => {
   );
 };
 
-const SignInLink = () => (
-  <Typography variant="subtitle1">
-    Already have an account? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-  </Typography>
-);
-
 const SignInForm = compose(
   withRouter,
-  withFirebase
+  withFirebase,
+  withSnackbar
 )(SignInFormBase);
+
 export default SignIn;
 
-export { SignInForm, SignInLink };
+SignInFormBase.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase).isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  push: PropTypes.func.isRequired
+};
