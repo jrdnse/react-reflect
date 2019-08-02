@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -82,21 +82,42 @@ const NavigationAuth = () => {
     <React.Fragment>
       <div className={classes.toolbar} />
       <List>
-        <ListItem component={NavLink} to={ROUTES.HOME} button key={1} onClick={() => setMobileOpen(false)}>
+        <ListItem
+          component={React.forwardRef((props, ref) => (
+            <Link to={ROUTES.HOME} {...props} ref={ref} />
+          ))}
+          button
+          key={1}
+          onClick={() => setMobileOpen(false)}
+        >
           <ListItemIcon>
             <Home />
           </ListItemIcon>
           <ListItemText>HOME</ListItemText>
         </ListItem>
 
-        <ListItem component={NavLink} to={ROUTES.CARDS} button key={2} onClick={() => setMobileOpen(false)}>
+        <ListItem
+          component={React.forwardRef((props, ref) => (
+            <Link to={ROUTES.CARDS} {...props} ref={ref} />
+          ))}
+          button
+          key={2}
+          onClick={() => setMobileOpen(false)}
+        >
           <ListItemIcon>
             <ViewCarousel />
           </ListItemIcon>
           <ListItemText>CARDS</ListItemText>
         </ListItem>
 
-        <ListItem component={NavLink} to={ROUTES.ACCOUNT} button key={3} onClick={() => setMobileOpen(false)}>
+        <ListItem
+          component={React.forwardRef((props, ref) => (
+            <Link to={ROUTES.ACCOUNT} {...props} ref={ref} />
+          ))}
+          button
+          key={3}
+          onClick={() => setMobileOpen(false)}
+        >
           <ListItemIcon>
             <AccountBox />
           </ListItemIcon>
@@ -166,7 +187,9 @@ const NavigationAuth = () => {
         variant="extended"
         aria-label="delete"
         className={classes.fab}
-        component={NavLink}
+        component={React.forwardRef((props, ref) => (
+          <Link to={ROUTES.ADD_CARD} {...props} ref={ref} />
+        ))}
         to={ROUTES.ADD_CARD}
       >
         <AddIcon className={classes.extendedIcon} />
