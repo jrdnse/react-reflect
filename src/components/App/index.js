@@ -18,6 +18,7 @@ const App = () => (
     <div>
       <Helmet>
         <meta charSet="utf-8" />
+        <meta httpEquiv="Content-Security-Policy" content="" />
       </Helmet>
       <Navigation />
       <AuthUserContext.Consumer>
