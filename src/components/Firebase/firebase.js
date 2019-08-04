@@ -21,13 +21,6 @@ class Firebase {
 
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
-  doDeleteUser = () => {
-    const uid = this.getUserID();
-    this.db.ref(`users/${uid}`).remove();
-    this.db.ref(`day_collections/${uid}`).remove();
-    this.auth.currentUser.delete();
-  };
-
   user = uid => this.db.ref(`users/${uid}`);
 
   getUserID = () => this.auth.currentUser.uid;
